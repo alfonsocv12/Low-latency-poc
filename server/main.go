@@ -1,37 +1,41 @@
 package main
 
-func gstreamerReceiveMian() {
-    config := webrtc.Configuration{
-        ICeSevers: []webrtc.ICEServer{
+import (
+	"time"
+    "crypto/rand"
+
+	"github.com/pion/webrtc/v4"
+)
+
+func main() {
+    peerConnectionConfig := webrtc.Configuration{
+        ICEServers: []webrtc.ICEServer{
             {
-                URLs: []string{"stun:stun.l.google.com:19302"}
+                URLs: []string{"stun:stun.l.google.com:19302"},
             },
         },
     }
 
-    peerConnection, err := webrtc.NewPeerConnection(config)
+    // Crea
+    peerConnection, err := webrtc.NewPeerConnection(peerConnectionConfig)
     if err != nil {
         panic(err)
     }
 
-    peerConnection.OnTrack()
-}
-
-func OnTrack(track *webrtc.TrackRemote, _ *wenrtc.RTPReceiver) {
-    go func() {
-        ticker := time.NewTicker(time.Second * 3)
-
-        for range ticker.C {
-            rtcpSendErr := peerConnection.WeiteRTCP([]rtcp.Packet(
-                %rtcp.Packet{&rtcp.PictureLossIndication{MediaSSRC: uint32(tracl.SSRC)}}
-            ))
-            if rtcpSendErr != nil {
-                fmt.Println(rtcpSendErr)
-            }
-        }
+    dataChannel, err := peerConnection.CreateDataChannel("data", nil)
+    if err != nil {
+        panic(err)
     }
-    
-    codecNameIndexMimeType := 1
-    codecName := strings.Split(track.Codec().RTCodecCapability.MimeType, "/")[codecNameIndexMimeType]
 
+    go func() {
+        ticker := time.NewTicker(100 * time.Millisecond)
+        defer ticker.Stop()
+        for range ticker.C {
+            bytes := make([]byte, 1024)
+            rand.Read(bytes)
+            dataChannel.Send(bytes)
+        }
+    }()
+
+    select {}
 }
