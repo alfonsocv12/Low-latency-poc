@@ -11,7 +11,12 @@ func main() {
     // Set up signaling mechanism for peer connection
 
     // Create a new WebRTC peer connection configuration
-    config := webrtc.Configuration{}
+    config := webrtc.Configuration{        
+        ICEServers: []webrtc.ICEServer{
+            {
+            },
+        },
+    }
 
     // Create a new WebRTC peer connection
     peerConnection, err := webrtc.NewPeerConnection(config)
@@ -24,7 +29,13 @@ func main() {
     peerConnection.OnDataChannel(func(dc *webrtc.DataChannel) {
         dc.OnMessage(func(msg webrtc.DataChannelMessage) {
             // Calculate delay and print it out
-            fmt.Printf("Delay: %v\n", time.Since(time.Unix(0, msg.Timestamp()))
+            msgSting := string(msg.Data)
+            data, _ := time.Parse(time.RFC3339, msgSting)
+            if data.IsZero() {
+                fmt.Println("Invalid time")
+                return
+            }  
+            fmt.Printf("Delay: %v\n", time.Since(data))
         })
     })
 
