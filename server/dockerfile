@@ -1,0 +1,13 @@
+FROM golang:1.22.2-bookworm
+
+WORKDIR /usr/src/app
+
+COPY run_server.sh ./
+RUN apt-get update && apt-get install -y \
+    libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+    gstreamer1.0-plugins-good
+
+ENTRYPOINT ["tail"]
+RUN go install github.com/pion/example-webrtc-applications/v3/gstreamer-send
+
+CMD ["-f","/dev/null"]
