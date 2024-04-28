@@ -1,19 +1,19 @@
 package main
 
 import (
-    "fmt"
-    "net"
+	"encoding/binary"
+	"fmt"
+	"net"
+	"time"
 )
 
 func main() {
-    // Get the local UDP address
     localAddr, err := net.ResolveUDPAddr("udp", ":8080")
     if err != nil {
         fmt.Println("Error resolving local address:", err)
         return
     }
 
-    // Create a UDP listener
     conn, err := net.ListenUDP("udp", localAddr)
     if err != nil {
         fmt.Println("Error listening:", err)
@@ -23,40 +23,27 @@ func main() {
 
     fmt.Println("Listening for incoming UDP messages on", localAddr)
 
-    // Start a goroutine to handle incoming messages
     go func() {
         for {
-            // Buffer to hold incoming data
-            buffer := make([]byte, 1024)
+            buffer := make([]byte, 8)
 
-            // Read data from the connection
-            n, addr, err := conn.ReadFromUDP(buffer)
+            _, _, err := conn.ReadFromUDP(buffer)
+            receivedTime := time.Now()
             if err != nil {
                 fmt.Println("Error reading:", err)
                 continue
             }
 
-            fmt.Printf("Received message from %s: %s\n", addr, string(buffer[:n]))
+            sendTime := time.Unix(0, int64(binary.LittleEndian.Uint64(buffer)))
+
+            fmt.Printf(
+                "Received read message dealta %s Received %s Send %s\n", 
+                receivedTime.Sub(sendTime).String(),
+                receivedTime.Format("2006-01-02 15:04:05.000"),
+                sendTime.Format("2006-01-02 15:04:05.000"),
+            )
         }
     }()
 
-    // Get the remote UDP address
-    remoteAddr, err := net.ResolveUDPAddr("udp", "127.0.0.1:8080")
-    if err != nil {
-        fmt.Println("Error resolving remote address:", err)
-        return
-    }
-
-    // Send a message to the remote peer
-    message := []byte("Hello from peer 1")
-    _, err = conn.WriteToUDP(message, remoteAddr)
-    if err != nil {
-        fmt.Println("Error sending message:", err)
-        return
-    }
-
-    fmt.Println("Message sent to remote peer")
-    
-    // Infinite loop to keep the program running
     select {}
 }
