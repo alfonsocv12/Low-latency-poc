@@ -30,12 +30,13 @@ func main() {
             buffer := make([]byte, 1024)
 
             // Read data from the connection
-            n, addr, err := conn.ReadFromUDP(buffer)
+            n, addr, err := conn.ReadFromUDP(buffer) 
+
             if err != nil {
                 fmt.Println("Error reading:", err)
                 continue
             }
-
+    
             fmt.Printf("Received message from %s: %s\n", addr, string(buffer[:n]))
         }
     }()
