@@ -1,3 +1,3 @@
 compile-macos:
-	g++ ./main.cpp -Wall -g -o bin/server
-	g++ ./client.cpp -Wall -g -o bin/client
+	g++ ./main.cpp -Wall -o bin/server
+	g++ ./client.cpp -Wall -o bin/client
