@@ -1,4 +1,5 @@
 //SERVER.CPP
+#include <iostream>
 #include <sys/types.h>    
 #include <sys/socket.h>   
 #include <netinet/in.h>   
@@ -66,11 +67,10 @@ string read_file()
 string liner_appender(char* msg)
 {
   
-  string line = read_file();
+  /* string line = read_file(); */
   string og(msg);
-  string resp = og + " - " + line;
 
-  return resp;
+  return og;
 }
 
 /*
@@ -92,6 +92,8 @@ void data_transfer(int sockfd)
   if (n < 0) {
     error("ERROR: receiving a message from socket");
   }
+
+  std::cout << "Received: " << buffer << std::endl;
 
   string concate = liner_appender(buffer);
   char * resp = new char[concate.size() + 1];
