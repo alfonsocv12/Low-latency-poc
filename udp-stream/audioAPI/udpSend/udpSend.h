@@ -13,7 +13,6 @@ class UdpSend {
         int port = 8080;
         char bufferSize;
         std::vector<float> waveValues;
-        struct sockaddr_in servaddr;
         int sockfd;
         socklen_t len;
 
