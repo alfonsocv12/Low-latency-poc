@@ -11,7 +11,7 @@
 
 int main() {
     int sockfd;
-    struct sockaddr_in serverAddr;
+    struct sockaddr_in serverAddr, fromAddr;
     char buffer[MAX_BUFFER_SIZE];
 
     // Create UDP socket
@@ -25,6 +25,8 @@ int main() {
 
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(PORT);
+    
+    socklen_t fromAddrLen = sizeof fromAddr;
 
     if (inet_pton(AF_INET, SERVER_IP, &serverAddr.sin_addr) <= 0) {
         std::cerr << "Error: Invalid address or address not supported." << std::endl;
@@ -36,8 +38,8 @@ int main() {
         std::cout << "Server running on port " << PORT << std::endl;
 
         // Receive response from server
-        ssize_t recvBytes = recvfrom(sockfd, buffer, MAX_BUFFER_SIZE, MSG_WAITALL,
-                                    nullptr, nullptr);
+        ssize_t recvBytes = recvfrom(sockfd, buffer, sizeof(buffer), 
+                            0, (struct sockaddr*) &fromAddr, &fromAddrLen);
         if (recvBytes == -1) {
             std::cerr << "Error: Unable to receive response." << std::endl;
             close(sockfd);
