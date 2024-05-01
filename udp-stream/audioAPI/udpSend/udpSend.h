@@ -1,12 +1,23 @@
 #include <iostream>
 #include <vector>
+#include <stdlib.h> 
+#include <unistd.h> 
+#include <string.h> 
+#include <sys/types.h> 
+#include <sys/socket.h> 
+#include <arpa/inet.h> 
+#include <netinet/in.h> 
 
 class UdpSend {
     private:
-        int bufferSize;
+        int port = 8080;
+        char bufferSize;
         std::vector<float> waveValues;
+        struct sockaddr_in servaddr;
+        int sockfd;
+        socklen_t len;
 
     public:
-        UdpSend(int bufferSize);
+        UdpSend(char bufferSize);
         void send(float sample);
 };
