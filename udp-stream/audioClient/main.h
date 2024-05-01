@@ -1,7 +1,7 @@
 #include <RtAudio.h>
 
-#define INPUT_DEVICE_ID 2
-#define INPUT_CHANNEL_ID 1
+#define INPUT_DEVICE_ID 0 
+#define INPUT_CHANNEL_ID 0 
 #define OUTPUT_DEVICE_ID 0
 #define INPUT_CHANNELS 1
 

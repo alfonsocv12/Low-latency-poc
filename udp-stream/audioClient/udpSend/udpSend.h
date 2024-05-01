@@ -8,6 +8,8 @@
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 
+#define MSG_CONFIRM 0
+
 class UdpSend {
     private:
         int port = 12345;

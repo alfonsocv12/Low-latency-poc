@@ -7,7 +7,7 @@
 
 #define SERVER_IP "127.0.0.1" // Assuming server is running on localhost
 #define PORT 12345
-#define MAX_BUFFER_SIZE 8
+#define MAX_BUFFER_SIZE 20
 
 int main() {
     int sockfd;
@@ -22,8 +22,10 @@ int main() {
 
     // Set server address
     memset(&serverAddr, 0, sizeof(serverAddr));
+
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(PORT);
+
     if (inet_pton(AF_INET, SERVER_IP, &serverAddr.sin_addr) <= 0) {
         std::cerr << "Error: Invalid address or address not supported." << std::endl;
         close(sockfd);
@@ -34,7 +36,8 @@ int main() {
         std::cout << "Server running on port " << PORT << std::endl;
 
         // Receive response from server
-        ssize_t recvBytes = recv(sockfd, buffer, MAX_BUFFER_SIZE, 0);
+        ssize_t recvBytes = recvfrom(sockfd, buffer, MAX_BUFFER_SIZE, MSG_WAITALL,
+                                    nullptr, nullptr);
         if (recvBytes == -1) {
             std::cerr << "Error: Unable to receive response." << std::endl;
             close(sockfd);

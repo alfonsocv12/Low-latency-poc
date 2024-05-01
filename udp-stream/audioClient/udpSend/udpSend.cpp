@@ -19,21 +19,10 @@ UdpSend::UdpSend(char bufferSize) {
 }
 
 void UdpSend::send(float sample) {
-    if (this->waveValues.size() < bufferSize) {
-        this->waveValues.push_back(sample);
+    char value[this->bufferSize];
 
-        return;
-    }
-    
-    char waveChar[this->bufferSize + 1];
+    std::snprintf(value, sizeof value, "%f", sample);
 
-    for (size_t i = 0; i < this->waveValues.size(); ++i) {
-        waveChar[i] = static_cast<char>(this->waveValues[i]);
-    }
-
-    sendto(this->sockfd, (const char *)waveChar, strlen(waveChar),
-            0, (const struct sockaddr*) &servaddr,
-            sizeof(servaddr));
-
-    this->waveValues.clear();
+    sendto(this->sockfd, (const char *)value, strlen(value), MSG_CONFIRM,
+            (const struct sockaddr*) &servaddr, sizeof(servaddr));
 }
