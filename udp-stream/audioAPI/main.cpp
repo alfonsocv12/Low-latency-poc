@@ -1,6 +1,9 @@
 #include "./main.h"
 #include "./deviceEntity.h"
+#include "./udpSend/udpSend.h"
 #include <iostream>
+
+UdpSend udpSend = UdpSend(8);
 
 SParams setUpSParams(DeviceType deviceType, DeviceEntity device) {
     SParams deviceParameters;
@@ -26,7 +29,7 @@ int audioCallback(void *outputBuffer, void *inputBuffer,
     for (unsigned int i = 0; i < nBufferFrames; ++i) {
         float sample = *inBuffer++;
 
-        std::cout << sample << std::endl;
+        udpSend.send(sample);
 
         inBuffer += INPUT_CHANNELS;
     }
@@ -37,7 +40,8 @@ int audioCallback(void *outputBuffer, void *inputBuffer,
 int main() {
     RtAudio dac;
 
-    DeviceEntity inputDevice(DeviceType::INPUT, INPUT_DEVICE_ID);
+    DeviceEntity inputDevice(DeviceType::INPUT, INPUT_DEVICE_ID); 
+    inputDevice.channelId = INPUT_CHANNEL_ID;
 
     SParams inputParameters = setUpSParams(DeviceType::INPUT, inputDevice);
 
@@ -53,4 +57,33 @@ int main() {
                   << std::endl;
         exit(1);
     }
+
+    // Start stream
+    try {
+        dac.startStream();
+    } catch (RtAudioError &e) {
+        std::cout << "Error starting RtAudio stream: " << e.getMessage()
+                  << std::endl;
+        exit(1);
+    }
+
+    // Keep stream going until user presses a key
+    std::cout << "Audio stream running. Send exit to exit" << std::endl;
+
+    while (dac.isStreamRunning()) {
+        std::string input;
+        std::getline(std::cin, input);
+
+        if (input == "exit") {
+            try {
+                dac.stopStream();
+                dac.closeStream();
+            } catch (RtAudioError &e) {
+                std::cout << "Error stopping RtAudio stream: " << e.getMessage()
+                          << std::endl;
+                exit(1);
+            }
+        }
+    }
+
 }
