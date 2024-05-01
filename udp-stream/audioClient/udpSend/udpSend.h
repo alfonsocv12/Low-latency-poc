@@ -10,7 +10,7 @@
 
 class UdpSend {
     private:
-        int port = 8080;
+        int port = 12345;
         char bufferSize;
         std::vector<float> waveValues;
         int sockfd;
