@@ -6,53 +6,47 @@
 #include <sys/socket.h>
 
 #define SERVER_IP "127.0.0.1" // Assuming server is running on localhost
-#define PORT 12345
+#define PORT 5432
 #define MAX_BUFFER_SIZE 20
 
 int main() {
     int sockfd;
-    struct sockaddr_in serverAddr, fromAddr;
-    char buffer[MAX_BUFFER_SIZE];
 
-    // Create UDP socket
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-        std::cerr << "Error: Unable to create socket." << std::endl;
-        return EXIT_FAILURE;
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0) {
+        std::cerr << "ERROR: creating an endpoint for communication" << std::endl;
     }
 
-    // Set server address
-    memset(&serverAddr, 0, sizeof(serverAddr));
+    struct sockaddr_in serv_addr;
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(PORT);
-    
-    socklen_t fromAddrLen = sizeof fromAddr;
+    int yes = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+        std::cerr << "ERROR: refreshing socket" << std::endl;
+    }
 
-    if (inet_pton(AF_INET, SERVER_IP, &serverAddr.sin_addr) <= 0) {
-        std::cerr << "Error: Invalid address or address not supported." << std::endl;
-        close(sockfd);
-        return EXIT_FAILURE;
+    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+        std::cerr << "ERROR: binding name to socket" << std::endl;
     }
 
     while (true) {
-        std::cout << "Server running on port " << PORT << std::endl;
+        char buffer[MAX_BUFFER_SIZE];
+        memset(buffer, 0, sizeof(buffer));
 
-        // Receive response from server
-        ssize_t recvBytes = recvfrom(sockfd, buffer, sizeof(buffer), 
-                            0, (struct sockaddr*) &fromAddr, &fromAddrLen);
-        if (recvBytes == -1) {
-            std::cerr << "Error: Unable to receive response." << std::endl;
-            close(sockfd);
-            return EXIT_FAILURE;
+        struct sockaddr_in cli_addr;
+        socklen_t addr_size = sizeof(cli_addr);
+
+        int n = recvfrom(sockfd, buffer, MAX_BUFFER_SIZE,
+                        0, (struct sockaddr *)&cli_addr, &addr_size);
+        if (n < 0) {
+            std::cerr << "ERROR: receiving a message from socket" << std::endl;
         }
 
-        buffer[recvBytes] = '\0'; // Null-terminate the received data
-
-        // Display response from server
-        std::cout << "Response from server: " << buffer << std::endl;
+        std::cout << "Received: " << buffer << std::endl;
     }
 
     close(sockfd);
-
-    return EXIT_SUCCESS;
 }
