@@ -12,7 +12,9 @@
 
 class UdpSend {
     private:
-        int port = 12345;
+        int server_port = 5432;
+        const char *host = "127.0.0.1";
+        int client_port = 5433;
         char bufferSize;
         std::vector<float> waveValues;
         int sockfd;
