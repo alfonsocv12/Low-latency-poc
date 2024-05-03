@@ -19,6 +19,7 @@ class UdpSend {
         std::vector<float> waveValues;
         int sockfd;
         socklen_t len;
+        struct sockaddr_in servaddr;
 
     public:
         UdpSend(char bufferSize);
