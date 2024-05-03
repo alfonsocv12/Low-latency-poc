@@ -3,8 +3,10 @@
 UdpSend::UdpSend(char bufferSize) {
     this->bufferSize = bufferSize;
     this->waveValues = {};
+    
+    this->sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
-    if ( (this->sockfd = socket(AF_INET, SOCK_DGRAM, 0) < 0)) {
+    if (this->sockfd < 0) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
     }
@@ -15,7 +17,7 @@ UdpSend::UdpSend(char bufferSize) {
     inet_pton(AF_INET, this->host, &(this->servaddr.sin_addr));
 
     int yes = 1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+    if (setsockopt(this->sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
         std::cerr << "ERROR: refreshing socket" << std::endl;
     }
 
@@ -25,9 +27,11 @@ UdpSend::UdpSend(char bufferSize) {
     cli_addr.sin_port = htons(this->client_port);
     cli_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if (bind(sockfd, (struct sockaddr *) &cli_addr, sizeof(cli_addr)) < 0) {
+    if (bind(this->sockfd, (struct sockaddr *) &cli_addr, sizeof(cli_addr)) < 0) {
         std::cerr << "ERROR: binding name to socket" << std::endl;
     }
+
+    std::cout << "Finish creating" << std::endl;
 }
 
 void UdpSend::send(float sample) {
@@ -35,9 +39,7 @@ void UdpSend::send(float sample) {
 
     std::snprintf(value, sizeof value, "%f", sample);
     
-
-    const char *msg = "Hello, server!";
-    int n = sendto(this->sockfd, msg, strlen(msg), MSG_CONFIRM,
+    int n = sendto(this->sockfd, (char *)value, strlen(value), MSG_CONFIRM,
             (struct sockaddr *) &this->servaddr, sizeof(this->servaddr));
     if ( n < 0) {
         std::cout << "ERROR: sending a message on the socket" << std::endl;
