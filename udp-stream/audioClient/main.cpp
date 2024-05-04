@@ -3,7 +3,7 @@
 #include "./udpSend/udpSend.h"
 #include <iostream>
 
-UdpSend udpSend = UdpSend(20);
+UdpSend udpSend = UdpSend(24);
 
 SParams setUpSParams(DeviceType deviceType, DeviceEntity device) {
     SParams deviceParameters;

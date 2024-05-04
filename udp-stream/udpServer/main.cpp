@@ -7,7 +7,7 @@
 
 #define SERVER_IP "127.0.0.1" // Assuming server is running on localhost
 #define PORT 5432
-#define MAX_BUFFER_SIZE 20
+#define MAX_BUFFER_SIZE 24
 
 int main() {
     int sockfd;

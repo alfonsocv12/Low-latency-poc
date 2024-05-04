@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#define MAX_INPUT_O 20
+#define MAX_INPUT_O 110
 
 int main() {
     int sockfd;

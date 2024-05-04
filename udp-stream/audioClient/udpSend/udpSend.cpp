@@ -1,4 +1,5 @@
 #include "udpSend.h"
+#include <sstream>
 
 UdpSend::UdpSend(char bufferSize) {
     this->bufferSize = bufferSize;
@@ -35,10 +36,17 @@ UdpSend::UdpSend(char bufferSize) {
 }
 
 void UdpSend::send(float sample) {
-    char value[this->bufferSize];
-
-    std::snprintf(value, sizeof value, "%f", sample);
+    std::stringstream ss;
+    ss << std::scientific << sample;
+    std::string sampleStr = ss.str();
     
+    const char* value = sampleStr.c_str();
+    
+    std::cout << "string_size: " << sizeof(sampleStr) << std::endl;
+    std::cout << "float: " << sample << std::endl;
+    std::cout << "string: " << sampleStr << std::endl;
+    std::cout << "back to float: " << std::stof(sampleStr) << std::endl;
+
     int n = sendto(this->sockfd, (char *)value, strlen(value), MSG_CONFIRM,
             (struct sockaddr *) &this->servaddr, sizeof(this->servaddr));
     if ( n < 0) {
