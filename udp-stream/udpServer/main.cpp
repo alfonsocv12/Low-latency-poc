@@ -44,8 +44,10 @@ int main() {
         if (n < 0) {
             std::cerr << "ERROR: receiving a message from socket" << std::endl;
         }
-
+        
+        float bufferValue = std::atof(buffer);
         std::cout << "Received: " << buffer << std::endl;
+        std::cout << "Received as float: " << bufferValue << std::endl;
     }
 
     close(sockfd);
