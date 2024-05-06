@@ -9,7 +9,9 @@
 #include <netinet/in.h>
 #include <string>
 
-#define MSG_CONFIRM 0
+#if defined(__MACOSX_CORE__)
+    #define MSG_CONFIRM 0
+#endif
 
 class UdpSend {
     private:
