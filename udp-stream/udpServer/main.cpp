@@ -28,9 +28,10 @@ int main() {
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(PORT);
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-
+     
     int yes = 1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &serv_addr, sizeof(server_addr)) == -1) {
         std::cerr << "ERROR: refreshing socket" << std::endl;
     }
 
