@@ -7,7 +7,7 @@ RT_AUDIO_LIB_WIN32 = ..\audioClient\lib\rtaudio-5.2.0
 compile-windows:
 	g++ $(WINDOWS_LIBS) -std=c++14 \
 		./main.cpp $(RT_AUDIO_LIB_WIN32)\RtAudio.cpp \ 
-		-L $(RT_AUDIO_LIB_WIN32) \
+		-L "$(RT_AUDIO_LIB_WIN32)" \
 		-o bin/server
 
 compile-macos:
