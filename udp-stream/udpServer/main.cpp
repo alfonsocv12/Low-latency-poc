@@ -3,7 +3,10 @@
 #include <cstdlib>
 #include <unistd.h>
 
-#if defined(__MACOSX_CORE__)
+#if defined(__WIN32__)
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+#elif defined(__MACOSX_CORE__)
     #include <arpa/inet.h>
     #include <sys/socket.h>
 #endif
