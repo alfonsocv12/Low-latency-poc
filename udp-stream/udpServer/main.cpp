@@ -2,7 +2,6 @@
 #include <cstring>
 #include <cstdlib>
 #include <unistd.h>
-#include <arpa/inet.h>
 #include <sys/socket.h>
 
 #if defined(__MACOSX_CORE__)
