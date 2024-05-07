@@ -1,13 +1,11 @@
 MACOS_LIBS = -D__MACOSX_CORE__ -framework CoreAudio -framework CoreFoundation
-WINDOWS_LIBS = -D__WINDOWS_ASIO__ -Iinclude -lasound -lole32
+WINDOWS_LIBS = -D__WINDOWS_DS -lole32 -lwinmm -ldsound 
 
 RT_AUDIO_LIB = ../audioClient/lib/rtaudio-5.2.0
 
 compile-windows:
 	g++ $(WINDOWS_LIBS) -std=c++14 \
-		./main.cpp $(RT_AUDIO_LIB)/RtAudio.cpp \
-		$(RT_AUDIO_LIB)/asio.cpp $(RT_AUDIO_LIB)/audioprobe.cpp \
-		$(RT_AUDIO_LIB)/asiolist.cpp $(RT_AUDIO_LIB)/asiodrivers.cpp $(RT_AUDIO_LIB)/iasiothiscallresolver.cpp \
+		./main.cpp $(RT_AUDIO_LIB)/RtAudio.cpp $(RT_AUDIO_LIB)/audioprobe.cpp \
 		-I../audioClient/lib/rtaudio-5.2.0 \
 		-o bin/server
 
