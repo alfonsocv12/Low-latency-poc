@@ -5,6 +5,10 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
+#if defined(__MACOSX_CORE__)
+    #include <arpa/inet.h>
+#endif
+
 #define SERVER_IP "127.0.0.1" // Assuming server is running on localhost
 #define PORT 5432
 #define MAX_BUFFER_SIZE 24
