@@ -5,7 +5,7 @@ RT_AUDIO_LIB = ../audioClient/lib/rtaudio-5.2.0
 
 compile-windows:
 	g++ $(WINDOWS_LIBS) -std=c++14 \
-		./main.cpp $(RT_AUDIO_LIB)/RtAudio.cpp $(RT_AUDIO_LIB)/audioprobe.cpp \
+		./main.cpp $(RT_AUDIO_LIB)/RtAudio.cpp \ 
 		-I../audioClient/lib/rtaudio-5.2.0 \
 		-o bin/server
 
