@@ -2,10 +2,10 @@
 #include <cstring>
 #include <cstdlib>
 #include <unistd.h>
-#include <sys/socket.h>
 
 #if defined(__MACOSX_CORE__)
     #include <arpa/inet.h>
+    #include <sys/socket.h>
 #endif
 
 #define SERVER_IP "127.0.0.1" // Assuming server is running on localhost
