@@ -31,7 +31,7 @@ int main() {
      
     int yes = 1;
 
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &serv_addr, sizeof(server_addr)) == -1) {
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &serv_addr, sizeof(serv_addr)) == -1) {
         std::cerr << "ERROR: refreshing socket" << std::endl;
     }
 
