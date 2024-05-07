@@ -1,5 +1,5 @@
 MACOS_LIBS = -D__MACOSX_CORE__ -framework CoreAudio -framework CoreFoundation
-WINDOWS_LIBS = -D__WINDOWS_DS -lole32 -lwinmm -ldsound 
+WINDOWS_LIBS = -D__WINDOWS_DS -lole32 -lwinmm -ldsound -lws2_32
 
 RT_AUDIO_LIB = ../audioClient/lib/rtaudio-5.2.0
 RT_AUDIO_LIB_WIN32 = ..\audioClient\lib\rtaudio-5.2.0
